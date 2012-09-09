@@ -1,15 +1,24 @@
 require "rulers/version"
 #for exercise 2
 require 'rulers/array'
+require 'rulers/routing'
 
 module Rulers
   # Your code goes here...
   class Application
     def call(env)
-     #for exercise 1
-     # `echo debug > debug.txt`
-      puts [1, 2].sum
-      [200, {'Content-Type' => 'text/html'}, ["Hello from Ruby on Rulers!"]]
+      controller, action = get_controller_and_action(env)
+      controller = controller.new(env)
+      response_body = controller.send(action)
+      [200, {'Content-Type' => 'text/html'}, [response_body]]
+    end
+  end
+
+  class Controller
+    attr_reader :env
+    def initialize(env)
+      @env = env
     end
   end
 end
+
